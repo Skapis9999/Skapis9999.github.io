@@ -1,27 +1,482 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Christos Skapetis</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Christos Skapetis is a Computer Vision Engineer focused on vision transformers, 3D reconstruction, depth estimation, pose estimation, and efficient AI systems.">
+        <meta name="keywords" content="Christos Skapetis, computer vision engineer, vision transformers, 3D reconstruction, depth estimation, pose estimation, streaming 3D reconstruction, token pruning, RAG, Eindhoven University of Technology">
+        <meta name="author" content="Christos Skapetis">
+        <meta name="robots" content="index,follow,max-image-preview:large">
+        <link rel="canonical" href="https://skapis9999.github.io/">
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Christos Skapetis - Computer Vision Engineer">
+        <meta property="og:description" content="Computer Vision Engineer focused on vision transformers, 3D reconstruction, depth estimation, pose estimation, and efficient AI systems.">
+        <meta property="og:url" content="https://skapis9999.github.io/">
+        <meta property="og:image" content="https://skapis9999.github.io/og-image.svg">
+        <meta property="og:image:alt" content="Christos Skapetis profile image">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="Christos Skapetis - Computer Vision Engineer">
+        <meta name="twitter:description" content="Computer Vision Engineer focused on vision transformers, 3D reconstruction, depth estimation, pose estimation, and efficient AI systems.">
+        <meta name="twitter:image" content="https://skapis9999.github.io/og-image.svg">
+        <meta name="theme-color" content="#004f90">
+        <link rel="icon" href="favicon.svg" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="favicon.svg">
+        <link rel="manifest" href="manifest.json">
+        <title>Christos Skapetis | Computer Vision Engineer & AI Researcher</title>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Christos Skapetis",
+            "jobTitle": "Computer Vision Engineer",
+            "description": "Computer Vision Engineer focused on vision transformers, 3D reconstruction, depth estimation, pose estimation, and efficient AI systems.",
+            "url": "https://skapis9999.github.io/",
+            "image": "https://skapis9999.github.io/profile.jpg",
+            "sameAs": [
+                "https://github.com/Skapis9999",
+                "https://linkedin.com/in/christos-skapetis"
+            ],
+            "alumniOf": [
+                {
+                    "@type": "CollegeOrUniversity",
+                    "name": "Eindhoven University of Technology"
+                },
+                {
+                    "@type": "CollegeOrUniversity",
+                    "name": "Aristotle University of Thessaloniki"
+                }
+            ]
+        }
+        </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 3px solid #004f90;
+        }
+        .header-text h1 {
+            font-size: 2.5em;
+            color: #004f90;
+            margin-bottom: 10px;
+        }
+        .header-text .title {
+            font-size: 1.2em;
+            color: #c85500;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .header-text .subtitle {
+            font-size: 1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .links a {
+            color: #004f90;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .links a:hover {
+            color: #c85500;
+        }
+        .section {
+            background: white;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            font-size: 1.5em;
+            color: #004f90;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #c85500;
+            padding-bottom: 10px;
+        }
+        .summary {
+            font-size: 1.05em;
+            line-height: 1.8;
+            color: #555;
+        }
+        .experience-item {
+            margin-bottom: 25px;
+        }
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .experience-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #004f90;
+        }
+        .experience-company {
+            color: #c85500;
+            font-weight: 500;
+        }
+        .experience-date {
+            color: #999;
+            font-size: 0.95em;
+        }
+        .experience-location {
+            color: #999;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .highlights {
+            list-style: none;
+            padding-left: 0;
+        }
+        .highlights li {
+            padding-left: 20px;
+            margin-bottom: 8px;
+            position: relative;
+            color: #555;
+        }
+        .highlights li:before {
+            content: "◦";
+            position: absolute;
+            left: 0;
+            color: #c85500;
+            font-weight: bold;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #004f90;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .project-card h3 {
+            color: #004f90;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .project-image {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            background: #f4f7fb;
+            padding: 8px;
+        }
+        .project-card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .tech-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .tech-item {
+            margin-bottom: 15px;
+        }
+        .tech-item strong {
+            color: #c85500;
+        }
+        .tech-item p {
+            color: #555;
+            margin-top: 5px;
+        }
+        .carousel-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .projects-carousel {
+            display: flex;
+            overflow: hidden;
+            border-radius: 6px;
+            flex: 1;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .carousel-button {
+            background: #004f90;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        .carousel-button:hover {
+            background: #c85500;
+        }
+        .carousel-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .dot.active {
+            background: #004f90;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Christos Skapetis</h1>
+<div class="container">
+    <div class="header">
+        <img src="images/profile.jpg" alt="Christos Skapetis" class="profile-picture">
+        <div class="header-text">
+            <h1>Christos Skapetis</h1>
+            <div class="title">Computer Vision Engineer</div>
+            <div class="subtitle">MSc AI in Engineering Systems @ TU Eindhoven</div>
+            <div class="subtitle" style="color: #777; font-weight: normal; font-size: 0.95em;">📍 Eindhoven, Netherlands</div>
+            <div class="links">
+                <a href="https://github.com/Skapis9999">GitHub</a>
+                <a href="https://linkedin.com/in/christos-skapetis">LinkedIn</a>
+            </div>
+        </div>
+    </div>
 
-<p>MSc AI in Engineering Systems @ TU Eindhoven</p>
+    <div class="section">
+        <h2>Professional Summary</h2>
+        <p class="summary">Computer Vision Engineer passionate about applied research, real-world impact, and human-centred machine learning. Specializing in vision transformer optimization, pose estimation, and edge device deployment. Seeking roles combining innovation, systems thinking, and cutting-edge AI.</p>
+    </div>
 
-<p>
-<a href="https://github.com/Skapis9999">GitHub</a>
-|
-<a href="https://linkedin.com/in/christos-skapetis">LinkedIn</a>
-</p>
+    <div class="section">
+        <h2>Experience</h2>
+        
+        <div class="experience-item">
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">Computer Vision Researcher</div>
+                    <div class="experience-company">Eindhoven University of Technology</div>
+                </div>
+                <div class="experience-date">Jul 2025 – Oct 2025</div>
+            </div>
+            <div class="experience-location">Eindhoven, NL</div>
+            <ul class="highlights">
+                <li>Optimised large-scale Vision Transformers (up to 1.1B params) for depth estimation, achieving 15-24% reduction in inference cost with negligible accuracy loss</li>
+                <li>Implemented adaptive token merging (ALGM) at intermediate encoder layers to mitigate computational bottlenecks in dense prediction tasks</li>
+                <li>Validated robustness across datasets, ensuring model performance remained within 1% of baseline</li>
+            </ul>
+        </div>
 
-<h2>Projects</h2>
+        <div class="experience-item">
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">Machine Learning Intern</div>
+                    <div class="experience-company">SpectX</div>
+                </div>
+                <div class="experience-date">Feb 2025 – Jun 2025</div>
+            </div>
+            <div class="experience-location">Delft, NL (Remote)</div>
+            <ul class="highlights">
+                <li>Developed a 6-degree-of-freedom (6DOF) pose estimation system for autonomous UAV inspection of offshore wind turbines</li>
+                <li>Built pipeline of Perspective-n-Point (PnP) with Mask R-CNN and a real-time tracking framework</li>
+                <li>Optimised YOLOv7 multi-class detector to automate directional classification</li>
+                <li>Achieved 10% angular error in optimal conditions, outperforming legacy segmentation-based baselines</li>
+            </ul>
+        </div>
 
-<ul>
-<li>Temporal Token Propagation (TTP)</li>
-<li>Vision Transformer Optimization</li>
-<li>6DOF Pose Estimation</li>
-</ul>
+        <div class="experience-item">
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">Founder</div>
+                    <div class="experience-company">FeelMe</div>
+                </div>
+                <div class="experience-date">Dec 2021 – Dec 2022</div>
+            </div>
+            <div class="experience-location">Thessaloniki, GR</div>
+            <ul class="highlights">
+                <li>Founded FeelMe, a team developing a multi-platform system supporting caregivers of high-functioning autistic children (ages 4–12)</li>
+                <li>Combined machine learning with budget smartwatches to deliver insights and alerts</li>
+                <li>Secured 2nd place in the IEEE EMEA Entrepreneurship Week Final 2022</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Selected Technical Projects</h2>
+        <div class="carousel-container">
+            <button class="carousel-button" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+            <div class="projects-carousel">
+                <div class="project-card carousel-slide">
+                    <img class="project-image" src="images/ttp.png" alt="Temporal Token Propagation project image" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22960%22 height=%22360%22 viewBox=%220 0 960 360%22><rect width=%22960%22 height=%22360%22 fill=%22%23e9eef5%22/><text x=%2250%25%22 y=%2248%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2232%22 fill=%22%23004f90%22>Temporal Token Propagation</text><text x=%2250%25%22 y=%2260%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23666%22>Upload images/ttp.jpg</text></svg>'">
+                    <h3>Temporal Token Propagation for Video 3D Reconstruction</h3>
+                    <p>Introduced TTP, a training-free mechanism to recover lost geometric context in streaming 3D reconstruction. Propagates final-layer output tokens from previous frames to mitigate performance degradation from token pruning while maintaining bounded memory, significantly improving 3D reconstruction and video depth estimation without computational overhead.</p>
+                    <p style="margin-top: 10px; font-size: 0.9em; color: #c85500; font-weight: 600;">Publication status: To be published</p>
+                </div>                
+                <div class="project-card carousel-slide">
+                    <img class="project-image" src="images/edge-segmentation.png" alt="Semantic segmentation project image" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22960%22 height=%22360%22 viewBox=%220 0 960 360%22><rect width=%22960%22 height=%22360%22 fill=%22%23e9eef5%22/><text x=%2250%25%22 y=%2248%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2232%22 fill=%22%23004f90%22>Edge Semantic Segmentation</text><text x=%2250%25%22 y=%2260%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23666%22>Upload images/edge-segmentation.jpg</text></svg>'">
+                    <h3>Efficient Semantic Segmentation for Edge Devices</h3>
+                    <p>Benchmarked and optimised semantic segmentation models for edge deployment on the Cityscapes dataset. Applied attention modules and advanced training strategies within a sub-3M parameter budget.</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;"><a href="https://tinyurl.com/34vnwxm4" style="color: #004f90;">View Repository →</a></p>
+                </div>
+                <div class="project-card carousel-slide active">
+                    <img class="project-image" src="images/local-rag.png" alt="Local RAG project image" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22960%22 height=%22360%22 viewBox=%220 0 960 360%22><rect width=%22960%22 height=%22360%22 fill=%22%23e9eef5%22/><text x=%2250%25%22 y=%2248%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2232%22 fill=%22%23004f90%22>Local RAG Pipeline</text><text x=%2250%25%22 y=%2260%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-family=%22Arial,sans-serif%22 font-size=%2216%22 fill=%22%23666%22>Upload images/local-rag.jpg</text></svg>'">
+                    <h3>Local RAG Pipeline with Dynamic Web Grounding</h3>
+                    <p>Engineered a privacy-first RAG pipeline using transformer encoders to extract context from real-time web data. Built offline-capable inference architectures with built-in traceability.</p>
+                    <p style="margin-top: 10px; font-size: 0.9em;"><a href="https://github.com/Skapis9999/DiplomaThesis" style="color: #004f90;">View Repository →</a></p>
+                </div>
+            </div>
+            <button class="carousel-button" id="nextBtn" onclick="changeSlide(1)">❯</button>
+        </div>
+        <div class="carousel-dots">
+            <span class="dot active" onclick="currentSlide(0)"></span>
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Education</h2>
+        
+        <div class="experience-item">
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">MSc in Artificial Intelligence and Engineering Systems</div>
+                    <div class="experience-company">Eindhoven University of Technology</div>
+                </div>
+                <div class="experience-date">Sept 2024 – Jun 2026</div>
+            </div>
+            <ul class="highlights">
+                <li><strong>Coursework:</strong> Computer Vision AI and 3D Data Analysis, Neural networks for computer vision, Engineering optimization, Machine learning for Systems and control, Embedded visual control, Bayesian ML</li>
+            </ul>
+        </div>
+
+        <div class="experience-item">
+            <div class="experience-header">
+                <div>
+                    <div class="experience-title">MEng in Electrical and Computer Engineering</div>
+                    <div class="experience-company">Aristotle University of Thessaloniki</div>
+                </div>
+                <div class="experience-date">Oct 2017 – Dec 2023</div>
+            </div>
+            <ul class="highlights">
+                <li><strong>Coursework:</strong> Pattern Recognition, Data Analysis, Algorithm Analysis and Design</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Technologies</h2>
+        <div class="tech-section">
+            <div class="tech-item">
+                <strong>Languages:</strong>
+                <p>Python, MATLAB/Octave, C++</p>
+            </div>
+            <div class="tech-item">
+                <strong>Tech Stack:</strong>
+                <p>PyTorch, HuggingFace Transformers, Torchvision, Scikit-learn, NumPy, SQL, Git, Docker</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSlideIndex = 0;
+
+    function changeSlide(n) {
+        showSlide(currentSlideIndex += n);
+    }
+
+    function currentSlide(n) {
+        showSlide(currentSlideIndex = n);
+    }
+
+    function showSlide(n) {
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+        
+        if (n >= slides.length) {
+            currentSlideIndex = 0;
+        }
+        if (n < 0) {
+            currentSlideIndex = slides.length - 1;
+        }
+        
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        slides[currentSlideIndex].classList.add('active');
+        dots[currentSlideIndex].classList.add('active');
+        
+        // Update button states
+        document.getElementById('prevBtn').disabled = currentSlideIndex === 0 && slides.length === 1;
+        document.getElementById('nextBtn').disabled = currentSlideIndex === slides.length - 1 && slides.length === 1;
+    }
+</script>
 
 </body>
 </html>
