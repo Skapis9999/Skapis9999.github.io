@@ -1,6 +1,6 @@
 {
   "name": "Christos Skapetis",
-  "short_name": "Christos Skapetis",
+  "short_name": "C. Skapetis",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -11,6 +11,11 @@
       "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ]
 }
