@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0a0a0c"/>
+  <circle cx="1040" cy="90" r="220" fill="#ff5a36" opacity="0.10"/>
+  <circle cx="120" cy="560" r="260" fill="#5eead4" opacity="0.08"/>
+  <circle cx="150" cy="255" r="66" fill="none" stroke="#ff5a36" stroke-width="6"/>
+  <circle cx="150" cy="255" r="24" fill="#5eead4"/>
+  <text x="330" y="250" font-family="Arial, Helvetica, sans-serif" font-size="60" font-weight="700" fill="#f2f0ea">Christos Skapetis</text>
+  <text x="330" y="312" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="#ff5a36">Machine Learning Engineer</text>
+  <text x="330" y="366" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#98979f">Vision Transformers • 3D Reconstruction • Depth Estimation</text>
+  <text x="330" y="404" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#98979f">Pose Estimation • Efficient AI Systems • TU Eindhoven</text>
+</svg>
