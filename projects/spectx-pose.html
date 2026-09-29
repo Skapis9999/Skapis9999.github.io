@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone Pose for Wind Turbines | Christos Skapetis</title>
+    <meta name="description" content="Team internship with SpectX: estimating a drone's pose relative to a wind turbine with Mask R-CNN + EPnP and a real-time YOLOv7 + CAMOT pipeline, with about 9% yaw error where the previous pipeline often exceeded 100%.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/spectx-pose.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Pose Estimation for Wind-Turbine Inspection Drones">
+    <meta property="og:description" content="Teaching an inspection drone where it is relative to a wind turbine, in real time.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/spectx-pose.html">
+    <meta property="og:image" content="https://skapis9999.github.io/images/projects/spectx/pose-tracking-poster.webp">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.02</span> Industry · Team internship with SpectX <span class="rule"></span></div>
+        <h1>Pose Estimation for Wind-Turbine Inspection Drones</h1>
+        <p class="tagline">Teaching an autonomous drone where it is relative to a wind turbine, so it can plan its inspection path without a pilot. In real time, from a single camera.</p>
+        <dl class="meta-grid">
+            <div><dt>Role</dt><dd>ML Intern, first author</dd></div>
+            <div><dt>Team</dt><dd>4 TU/e students</dd></div>
+            <div><dt>Company</dt><dd>SpectX, Delft (remote)</dd></div>
+            <div><dt>When</dt><dd>Feb – Jun 2025</dd></div>
+            <div><dt>Stack</dt><dd>PyTorch · YOLOv7 · Mask R-CNN · OpenCV EPnP</dd></div>
+        </dl>
+        <!-- Add a company / project link here, e.g.:
+        <div class="link-row">
+            <a class="btn btn-primary" href="https://..." target="_blank" rel="noopener">About SpectX →</a>
+        </div>
+        -->
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <figure class="figure hero-figure reveal">
+            <div class="frame"><video autoplay muted loop playsinline preload="metadata" poster="../images/projects/spectx/pose-tracking-poster.webp" width="1280" height="720" aria-label="Drone footage of a wind turbine with live pitch, roll and yaw readout"><source src="../media/spectx/pose-tracking.mp4" type="video/mp4"></video></div>
+            <figcaption><b>Live on drone footage.</b> The turbine is detected in every frame (green box), and the drone's pitch, roll and yaw relative to it are estimated on the fly (top-left).</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>Offshore turbines are huge, remote and <em>dangerous</em> to inspect by hand, so drones do it.</p>
+            <p>But a drone can only fly an inspection on its own if it knows its <em>angle to the turbine</em>. SpectX's existing pipeline often got that badly wrong, so we built a better one.</p>
+        </div>
+        <ul class="did-list reveal">
+            <li>Prototyped and compared <strong>two approaches</strong>: a geometric <strong>Mask R-CNN + EPnP</strong> pipeline for full 6-DoF pose, and a lightweight <strong>YOLOv7 + CAMOT</strong> tracker that reads the angle from the detection box.</li>
+            <li>Added a <strong>front/back classifier</strong> at SpectX's request. If the hub is visible you're in front; if the nacelle is visible you're behind.</li>
+            <li>Worked from 720 simulated renders, open datasets, and <strong>928 real turbine images</strong> from SpectX.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Impact</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">~9%</div><div class="label">yaw error in good conditions (8.8% and 9.9% on test shots)</div></div>
+            <div class="stat"><div class="value">&gt;100%</div><div class="label">typical error of the previous segmentation-based pipeline</div></div>
+            <div class="stat teal"><div class="value">0.97</div><div class="label">detection accuracy on the turbine body</div></div>
+            <div class="stat teal"><div class="value">Real-time</div><div class="label">single camera, no segmentation or depth sensor needed</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Reading the drone's angle</h2>
+        <p class="lede reveal">Tested on a scale turbine with known ground truth. The estimated yaw is printed in the corner of each frame.</p>
+        <div class="pair badges-bottom reveal">
+            <div class="side"><span class="badge">Predicted 89.5° · true 98.1°</span><img src="../images/projects/spectx/yaw-98.webp" alt="Scale wind turbine with estimated yaw of 89.5 degrees" loading="lazy" width="640" height="480"></div>
+            <div class="side"><span class="badge">Predicted 85.6° · true 95.0°</span><img src="../images/projects/spectx/yaw-95.webp" alt="Scale wind turbine with estimated yaw of 85.6 degrees" loading="lazy" width="640" height="480"></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Which side am I looking at?</h2>
+        <p class="lede reveal">Angle alone can't tell front from back. A multi-class YOLOv7 detector spots the <strong>hub</strong> (front) or the <strong>nacelle</strong> (back), which is key for locating damage and planning waypoints.</p>
+        <div class="pair badges-bottom reveal">
+            <div class="side ours"><span class="badge">Front side</span><img src="../images/projects/spectx/front-side.webp" alt="Wind turbine detected from the front, with hub identified" loading="lazy" width="640" height="640"></div>
+            <div class="side ours"><span class="badge">Back side</span><img src="../images/projects/spectx/back-side.webp" alt="Wind turbine at sunset detected from the back, with nacelle identified" loading="lazy" width="640" height="640"></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">How it fits together</h2>
+        <div class="flow reveal">
+            <div class="step"><h3>Detect</h3><p>YOLOv7 finds the turbine, hub and nacelle in each frame, in half precision for speed.</p></div>
+            <div class="step"><h3>Estimate</h3><p>The camera-angle-aware tracker turns the box geometry and focal length into pitch and yaw.</p></div>
+            <div class="step"><h3>Orient</h3><p>Hub or nacelle? A simple rule labels the front or back side.</p></div>
+            <div class="step"><h3>Smooth</h3><p>A moving average over frames removes jitter from noisy detections.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <span class="depth-tag reveal">Under the hood</span>
+        <h2 class="reveal">The geometric route, and why tracking won</h2>
+        <p class="lede reveal">The EPnP route matches known 3D points on the turbine to their 2D positions to recover the full 6-DoF pose. It works in principle, but it needs depth and well-spread points. On flat simulated renders, yaw errors ranged from 20% to 97%, so the lighter tracking pipeline became the recommendation.</p>
+        <div class="fig-grid three even">
+            <figure class="figure reveal">
+                <div class="frame"><img src="../images/projects/spectx/epnp-points.webp" alt="Simulated turbine with a selected 3D correspondence point annotated" loading="lazy" width="469" height="712"></div>
+                <figcaption><b>Picking correspondences</b> on a simulated turbine: blade tips, hub and base.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame"><img src="../images/projects/spectx/epnp-axes.webp" alt="Recovered camera axes drawn over the simulated turbine" loading="lazy" width="353" height="846"></div>
+                <figcaption><b>Recovered pose.</b> Original points (yellow), re-projected points (magenta) and the estimated axes.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame"><img src="../images/projects/spectx/yaw-overexposed.webp" alt="Overexposed frame where the yaw estimate fails" loading="lazy" width="640" height="480"></div>
+                <figcaption><b>Known failure mode.</b> Overexposure breaks the detection box, and the angle estimate goes with it (−32.5° vs ~0°).</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="ttp.html" class="prev"><div class="dir">← Previous</div><div class="t">Temporal Token Propagation</div></a>
+            <a href="edge-segmentation.html" class="next"><div class="dir">Next →</div><div class="t">Segmentation Can Be Light</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

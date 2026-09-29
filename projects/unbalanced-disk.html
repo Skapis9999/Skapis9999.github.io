@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swinging Up an Unbalanced Disk | Christos Skapetis</title>
+    <meta name="description" content="Learning the dynamics of a nonlinear unbalanced-disk system with neural networks and Gaussian processes, then training SAC and DQN agents to swing it upright.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/unbalanced-disk.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Swinging Up an Unbalanced Disk with Machine Learning">
+    <meta property="og:description" content="System identification with LSTMs and Gaussian processes, and reinforcement learning control on a real rig.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/unbalanced-disk.html">
+    <meta property="og:image" content="https://skapis9999.github.io/images/projects/unbalanced-disk/reward-surface.webp">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.04</span> Course project · ML for Control <span class="rule"></span></div>
+        <h1>Swinging Up an Unbalanced Disk with Machine Learning</h1>
+        <p class="tagline">Learning the physics of a real, pendulum-like machine from noisy data alone, then teaching an agent to swing it upright and keep it there.</p>
+        <dl class="meta-grid">
+            <div><dt>Team</dt><dd>3 students</dd></div>
+            <div><dt>Course</dt><dd>ML for Systems &amp; Control, TU/e</dd></div>
+            <div><dt>When</dt><dd>Spring 2025</dd></div>
+            <div><dt>Stack</dt><dd>PyTorch · GPs · LSTM · SAC · DQN · Optuna</dd></div>
+        </dl>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <figure class="figure hero-figure reveal">
+            <div class="frame"><img src="../images/projects/unbalanced-disk/system.webp" alt="The unbalanced disk setup: a blue disk with an off-centre weight, mounted on a motor housing" width="1280" height="960"></div>
+            <figcaption><b>The real system.</b> A motor-driven disk with an off-centre weight. The goal is to swing the weight all the way up and balance it there.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="fig-grid two">
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/reward-surface.webp" alt="3D surface plot of a custom reward function over disk angle and angular velocity" width="673" height="690"></div>
+                <figcaption><b>What the agent wants.</b> One of our custom reward landscapes over angle θ and angular velocity ω. The peaks sit at the upright position, reached slowly.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/angular-zones.webp" alt="Polar diagram splitting the disk angle into three reward regions" width="788" height="717"></div>
+                <figcaption><b>Three angular zones.</b> Different rules near the bottom, on the way up, and near the top shape the swing-up behaviour.</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>An unbalanced disk behaves like an inverted pendulum: <em>unstable</em>, nonlinear, and affected by friction.</p>
+            <p>Instead of deriving its equations, we let machine learning <em>learn its dynamics</em> and then <em>learn to control it</em>.</p>
+        </div>
+        <ul class="did-list reveal">
+            <li><strong>System identification:</strong> modelled the disk with NARX neural networks, LSTMs, and full and sparse <strong>Gaussian processes</strong>, with grid searches tracked in Weights &amp; Biases.</li>
+            <li><strong>Control:</strong> trained <strong>Soft Actor-Critic</strong> and <strong>Deep Q-Network</strong> agents with hand-designed reward functions, tuned with Optuna.</li>
+            <li>Tested the best policy on the <strong>physical rig</strong>, not just in simulation.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Impact</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">3×</div><div class="label">lower prediction error than the course's "good model" benchmark (LSTM: 0.0012 vs 0.0038 rad)</div></div>
+            <div class="stat"><div class="value">9×</div><div class="label">lower long-horizon simulation error than a linear model (NARX NN: 0.028 vs 0.255 rad)</div></div>
+            <div class="stat teal"><div class="value">40</div><div class="label">Optuna trials to tune the SAC agent across two reward designs</div></div>
+            <div class="stat teal"><div class="value">Real rig</div><div class="label">swung up in &lt;100 steps and held near the top on the physical system</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">From simulation to hardware</h2>
+        <div class="fig-grid two">
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/sac-sim.webp" alt="Disk angle over time for the five best SAC trials in simulation" loading="lazy" width="989" height="590"></div>
+                <figcaption><b>Simulation.</b> Angle over time for the 5 best SAC agents. Four swing up almost instantly and hold at the top (dashed line: ±π) for all 5000 steps.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/sac-physical.webp" alt="Disk angle over time on the physical setup using the best SAC agent" loading="lazy" width="630" height="470"></div>
+                <figcaption><b>Physical rig.</b> The agent on real hardware, with real friction and noise. It swings up in under 100 steps and holds steady near the top, about 0.4&nbsp;rad short of perfectly upright.</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <span class="depth-tag reveal">Under the hood</span>
+        <h2 class="reveal">Learning the dynamics</h2>
+        <div class="fig-grid two">
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/grid-search.webp" alt="Heatmap of test RMS error across input and output lag pairs" loading="lazy" width="916" height="790"></div>
+                <figcaption><b>How much history does the model need?</b> Test error for every pair of input/output lags (n<sub>a</sub>, n<sub>b</sub>) in the NARX network.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/unbalanced-disk/gp-prediction.webp" alt="Gaussian process prediction versus ground truth with residuals and confidence interval" loading="lazy" width="844" height="393"></div>
+                <figcaption><b>Predictions with uncertainty.</b> A Gaussian process tracks the true output closely and reports a 95% confidence band.</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="edge-segmentation.html" class="prev"><div class="dir">← Previous</div><div class="t">Segmentation Can Be Light</div></a>
+            <a href="jetbot.html" class="next"><div class="dir">Next →</div><div class="t">Autonomous JetBot</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

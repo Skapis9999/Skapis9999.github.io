@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous JetBot | Christos Skapetis</title>
+    <meta name="description" content="A small self-driving car on an NVIDIA Jetson Nano that takes a driving test: it follows lanes, reads traffic signs and QR codes, obeys hand gestures and racing flags, and waits for pedestrians.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/jetbot.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Autonomous JetBot: A Tiny Car That Takes Its Driving Test">
+    <meta property="og:description" content="Lanes, traffic signs, QR codes, hand gestures and racing flags, all read by one camera on a Jetson Nano.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/jetbot.html">
+    <meta property="og:image" content="https://skapis9999.github.io/images/projects/jetbot/jetbot.webp">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.05</span> Course project · Robotics <span class="rule"></span></div>
+        <h1>Autonomous JetBot: A Tiny Car That Takes Its Driving Test</h1>
+        <p class="tagline">One camera, one Jetson Nano, and a course full of traffic signs, QR codes, hand signals and racing flags. The car reads them all and drives the lap by itself.</p>
+        <dl class="meta-grid">
+            <div><dt>Team</dt><dd>6 students</dd></div>
+            <div><dt>My part</dt><dd>Racing-flag perception (red = stop, green = go)</dd></div>
+            <div><dt>Course</dt><dd>Embedded Visual Control, TU/e</dd></div>
+            <div><dt>When</dt><dd>Spring 2025</dd></div>
+            <div><dt>Stack</dt><dd>ROS · Docker · YOLOv8 · MediaPipe · OpenCV</dd></div>
+        </dl>
+        <div class="link-row">
+            <a class="btn btn-primary" href="https://www.youtube.com/watch?v=mwIgQCaTrQU" target="_blank" rel="noopener">Watch on YouTube →</a>
+            <a class="btn btn-ghost" href="https://github.com/GeorgiaCh96/EVC_final_project" target="_blank" rel="noopener">View repository</a>
+        </div>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="embed reveal">
+            <iframe src="https://www.youtube-nocookie.com/embed/mwIgQCaTrQU" title="Autonomous JetBot demo video" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="fig-grid two" style="align-items:center">
+            <div class="summary reveal">
+                <p>What if a robot had to pass the <em>same driving test</em> we do?</p>
+                <p>Stay in lane, obey the signs, wait for pedestrians, and follow the marshal's <em>flags</em>, all in real time on a credit-card-sized computer.</p>
+            </div>
+            <figure class="figure reveal">
+                <div class="frame"><img src="../images/projects/jetbot/jetbot.webp" alt="The JetBot: a small wheeled robot with a camera and an NVIDIA Jetson Nano" width="599" height="599"></div>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">What the car can see</h2>
+        <div class="tiles">
+            <div class="tile mine reveal">
+                <div class="flags" aria-hidden="true"><span class="red">RED · STOP</span><span class="green">GREEN · GO</span></div>
+                <div class="tile-body"><span class="mine-tag">My module</span><h3>Racing flags</h3><p>Borrowed from Formula&nbsp;1: wave a green flag and the car sets off, show red and it stops. It works by finding the dominant colour in each frame.</p></div>
+            </div>
+            <div class="tile reveal">
+                <img src="../images/projects/jetbot/line-tracking.webp" alt="Camera view of the robot following a dark lane line" loading="lazy" width="900" height="725">
+                <div class="tile-body"><h3>Lane keeping</h3><p>Follows the line and corrects instantly when it drifts.</p></div>
+            </div>
+            <div class="tile reveal">
+                <img src="../images/projects/jetbot/stop-sign.webp" alt="STOP sign detected with 0.99 confidence" loading="lazy" width="416" height="416">
+                <div class="tile-body"><h3>Stop signs</h3><p>A YOLOv8 detector spots STOP signs and brings the car to a halt.</p></div>
+            </div>
+            <div class="tile reveal">
+                <img src="../images/projects/jetbot/speed-limit.webp" alt="Speed limit 30 sign detected with 0.97 confidence" loading="lazy" width="415" height="379">
+                <div class="tile-body"><h3>Speed limits</h3><p>Reads the limit and adjusts its speed to match.</p></div>
+            </div>
+            <div class="tile reveal">
+                <img src="../images/projects/jetbot/hand-landmarks.webp" alt="Open hand annotated with 21 tracked landmarks" loading="lazy" width="850" height="740">
+                <div class="tile-body"><h3>Hand signals</h3><p>An open hand tells the car to go, like a traffic officer waving it through.</p></div>
+            </div>
+        </div>
+        <p class="lede reveal" style="margin-top:22px">It also reads <strong>QR codes</strong> for turns and <strong>waits for moving pedestrians</strong> before starting. When cues conflict, a priority system decides, with safety first.</p>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Impact</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">7 / 8</div><div class="label">requirements met, including every mandatory one</div></div>
+            <div class="stat"><div class="value">Full lap</div><div class="label">of the driving-test course, obeying all rules</div></div>
+            <div class="stat teal"><div class="value">6</div><div class="label">visual cues handled in parallel, by priority</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="unbalanced-disk.html" class="prev"><div class="dir">← Previous</div><div class="t">Swinging Up an Unbalanced Disk</div></a>
+            <a href="ttp.html" class="next"><div class="dir">Next →</div><div class="t">Temporal Token Propagation</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

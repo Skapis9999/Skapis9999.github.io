@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temporal Token Propagation | Christos Skapetis</title>
+    <meta name="description" content="MSc thesis: Temporal Token Propagation (TTP), a training-free module that recovers geometric context lost to token pruning in streaming 3D reconstruction, with only 0.1 GB of memory overhead.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/ttp.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Temporal Token Propagation for Video 3D Reconstruction">
+    <meta property="og:description" content="A training-free plug-in that lets streaming 3D reconstruction models remember what token pruning makes them forget.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/ttp.html">
+    <meta property="og:image" content="https://skapis9999.github.io/images/projects/ttp/method.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.01</span> MSc Thesis · TU/e <span class="rule"></span></div>
+        <h1>Temporal Token Propagation for Video 3D Reconstruction</h1>
+        <p class="tagline">A training-free plug-in that lets streaming 3D reconstruction models remember what token pruning makes them forget, for just 0.1&nbsp;GB of extra memory.</p>
+        <dl class="meta-grid">
+            <div><dt>Role</dt><dd>Sole author, MSc thesis</dd></div>
+            <div><dt>Lab</dt><dd>Mobile Perception Systems, TU/e</dd></div>
+            <div><dt>Supervisor</dt><dd>dr. Daan de Geus</dd></div>
+            <div><dt>Defended</dt><dd>June 2026</dd></div>
+            <div><dt>Stack</dt><dd>PyTorch · VGGT · StreamVGGT</dd></div>
+        </dl>
+        <div class="link-row">
+            <a class="btn btn-primary" href="https://research.tue.nl/en/studentTheses/accurate-yet-efficient-online-video-3d-reconstruction-via-tempora/" target="_blank" rel="noopener">Read the thesis →</a>
+            <a class="btn btn-ghost" href="#see-it">Watch it run</a>
+        </div>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <figure class="figure hero-figure reveal">
+            <div class="frame"><video controls muted playsinline preload="none" poster="../images/projects/ttp/kitti-depth.webp" width="1800" height="258"><source src="../media/ttp/kitti-depth.mp4" type="video/mp4"></video></div>
+            <figcaption><b>Streaming depth on KITTI (press play).</b> The model watches a driving video frame by frame and predicts depth (left) for every incoming frame (right).</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>Modern 3D reconstruction transformers can rebuild a scene from a video, but on long videos their memory <em>explodes</em>.</p>
+            <p>The usual fix throws old tokens away, and the model forgets parts of the scene. I built a way to <em>hand that memory back</em>, without retraining anything.</p>
+        </div>
+        <ul class="did-list reveal">
+            <li>Designed <strong>Temporal Token Propagation (TTP)</strong>: keep the final-layer output tokens of the last few frames and feed them into the current frame's attention.</li>
+            <li>Made it <strong>training-free and plug-and-play</strong>: no new parameters and no architecture changes. It works on top of existing pruning methods (OVGGT, InfiniteVGGT).</li>
+            <li>Evaluated it on <strong>4 datasets and 2 tasks</strong> (video depth estimation and 3D reconstruction), and ran analysis showing <strong>why</strong> it works without fine-tuning.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Impact</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">−17%</div><div class="label">depth error on KITTI<br>(AbsRel 0.128 → 0.106)</div></div>
+            <div class="stat"><div class="value">−25%</div><div class="label">3D reconstruction error on 7-Scenes<br>(Accuracy 0.024 → 0.018)</div></div>
+            <div class="stat teal"><div class="value">+0.1 GB</div><div class="label">memory overhead<br>(10.4 → 10.5 GB)</div></div>
+            <div class="stat teal"><div class="value">0</div><div class="label">new parameters, zero training required</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">The idea</h2>
+        <p class="lede reveal">Token pruning keeps memory bounded by evicting "redundant" tokens, which also deletes geometry. TTP adds a small <strong>sliding window of refined output tokens</strong> from recent frames: a compact summary of the scene so far, re-injected where the model can attend to it.</p>
+        <figure class="figure reveal">
+            <div class="frame paper"><img src="../images/projects/ttp/method.webp" alt="Diagram of the TTP module inserted between two frames of a streaming spatial-temporal decoder" loading="lazy" width="1373" height="562"></div>
+            <figcaption><b>Where TTP sits.</b> Output tokens from frame <i>t−1</i> pass through the TTP module and join the KV cache used by frame <i>t</i>, alongside the existing token-reduction step.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Results at a glance</h2>
+        <p class="lede reveal">It is more accurate than every streaming baseline, and memory stays flat no matter how long the video runs.</p>
+        <div class="fig-grid two">
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/ttp/accuracy-scatter.webp" alt="Scatter plot of delta accuracy versus AbsRel; TTP is top-left, best on both axes" loading="lazy" width="1100" height="868"></div>
+                <figcaption><b>Best of both metrics.</b> KITTI, 100 frames. Top-left is better: TTP (★) beats OVGGT, InfiniteVGGT, StreamVGGT and Evict3R.</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/ttp/vram-scaling.webp" alt="Line chart of peak VRAM against number of frames; StreamVGGT runs out of memory while TTP stays flat around 10 GB" loading="lazy" width="1400" height="848"></div>
+                <figcaption><b>Memory that doesn't grow.</b> 7-Scenes. StreamVGGT runs out of a 32&nbsp;GB GPU before 300 frames; TTP stays at ~10&nbsp;GB up to 1000 frames.</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section" id="see-it">
+    <div class="wrap stack">
+        <div>
+            <h2 class="reveal">See it</h2>
+            <p class="lede reveal">The same kitchen, reconstructed from a 7-Scenes video by the baseline and with TTP added. Cabinets and appliances come out sharper and better aligned.</p>
+            <div class="pair reveal">
+                <div class="side"><span class="badge">OVGGT</span><img src="../images/projects/ttp/7scenes-ovggt.webp" alt="3D point cloud of a kitchen reconstructed by OVGGT" loading="lazy" width="970" height="645"></div>
+                <div class="side ours"><span class="badge">OVGGT + TTP</span><img src="../images/projects/ttp/7scenes-ttp.webp" alt="3D point cloud of the same kitchen reconstructed with TTP" loading="lazy" width="961" height="650"></div>
+            </div>
+        </div>
+        <figure class="figure reveal">
+            <div class="frame"><video controls muted playsinline preload="none" poster="../images/projects/ttp/bonn-depth.webp" width="1400" height="473"><source src="../media/ttp/bonn-depth.mp4" type="video/mp4"></video></div>
+            <figcaption><b>Bonn (press play):</b> online depth for a dynamic indoor scene with people moving through it.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <span class="depth-tag reveal">Under the hood</span>
+        <h2 class="reveal">Why it works</h2>
+        <div class="fig-grid side">
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/ttp/budget-ablation.webp" alt="AbsRel against KV cache budget for OVGGT and TTP; the gap is largest at tight budgets" loading="lazy" width="1100" height="666"></div>
+                <figcaption><b>Tighter budget, bigger gain.</b> The fewer tokens survive eviction, the more TTP helps. It acts as a complementary memory channel that fills the gap the KV cache leaves, rather than competing with it (KITTI, 500 frames).</figcaption>
+            </figure>
+            <figure class="figure reveal">
+                <div class="frame paper"><img src="../images/projects/ttp/js-divergence.webp" alt="Per-layer Jensen-Shannon divergence between KV-cache and TTP tokens for keys and values" loading="lazy" width="1600" height="429"></div>
+                <figcaption><b>No fine-tuning needed.</b> Per-layer Jensen–Shannon divergence. Propagated <i>keys</i> match the cache distribution (near zero, left), so the model attends to them naturally. <i>Values</i> differ moderately (right), so they add new context instead of duplicating it.</figcaption>
+            </figure>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="jetbot.html" class="prev"><div class="dir">← Previous</div><div class="t">Autonomous JetBot</div></a>
+            <a href="spectx-pose.html" class="next"><div class="dir">Next →</div><div class="t">Pose Estimation for Inspection Drones</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

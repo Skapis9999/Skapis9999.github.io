@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segmentation Can Be Light | Christos Skapetis</title>
+    <meta name="description" content="Efficient semantic segmentation for edge devices on Cityscapes: an AFFormer + EfficientNet-B0 model with under 3M parameters beat a U-Net and an Attention U-Net that are 6–13× larger.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/edge-segmentation.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Segmentation Can Be Light: Efficient Semantic Segmentation for Edge Devices">
+    <meta property="og:description" content="A sub-3M-parameter model that beats networks 13× its size on Cityscapes.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/edge-segmentation.html">
+    <meta property="og:image" content="https://skapis9999.github.io/images/projects/edge-segmentation/comparison.webp">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.03</span> Course project · Computer Vision <span class="rule"></span></div>
+        <h1>Segmentation Can Be Light</h1>
+        <p class="tagline">Pixel-level understanding of city streets, for devices that can't afford a big network. A model with under 3M parameters beat models up to 13× its size.</p>
+        <dl class="meta-grid">
+            <div><dt>Role</dt><dd>Solo project</dd></div>
+            <div><dt>Course</dt><dd>Neural Networks for Computer Vision, TU/e</dd></div>
+            <div><dt>When</dt><dd>Spring 2025</dd></div>
+            <div><dt>Data</dt><dd>Cityscapes</dd></div>
+            <div><dt>Stack</dt><dd>PyTorch · AFFormer · EfficientNet · U-Net</dd></div>
+        </dl>
+        <div class="link-row">
+            <a class="btn btn-primary" href="https://github.com/Skapis9999/NNCV/tree/main/Final%20assignment" target="_blank" rel="noopener">View repository →</a>
+        </div>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <figure class="figure hero-figure reveal">
+            <div class="frame paper"><img src="../images/projects/edge-segmentation/comparison.webp" alt="Grid of segmentation outputs for three road scenes across BowlNet, AFFormer Tiny, Attention U-Net, fine-tuned Attention U-Net and U-Net" width="1536" height="754"></div>
+            <figcaption><b>Same scenes, five models.</b> A tunnel, an underpass and a highway: harsh lighting and cluttered backgrounds, where the models' strengths and weaknesses show up.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>Self-driving and mobile vision need segmentation that runs <em>on the device</em>, not in a data centre.</p>
+            <p>I benchmarked heavy and ultra-light architectures side by side and showed that a small transformer can <em>win on both accuracy and size</em>.</p>
+        </div>
+        <ul class="did-list reveal">
+            <li>Started from a U-Net baseline and added <strong>attention gates</strong>, a <strong>pretrained ResNet-34 encoder</strong>, LR scheduling and <strong>gradual unfreezing</strong>.</li>
+            <li>Adapted two lightweight models for edge use: <strong>BowlNet</strong> and <strong>AFFormer</strong> with an ImageNet-pretrained EfficientNet-B0 backbone.</li>
+            <li>Compared everything on accuracy, IoU, parameter count and FLOPs.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Impact</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">2.98M</div><div class="label">parameters in the winning AFFormer model</div></div>
+            <div class="stat"><div class="value">13×</div><div class="label">smaller than the Attention U-Net (39.6M), yet more accurate</div></div>
+            <div class="stat teal"><div class="value">15×</div><div class="label">fewer FLOPs than the plain U-Net (2.6G vs 40.2G)</div></div>
+            <div class="stat teal"><div class="value">0.503</div><div class="label">IoU, the best of all models tested (U-Net: 0.442)</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Accuracy vs. size</h2>
+        <p class="lede reveal">More parameters did not buy more accuracy. The smallest serious contender came out on top.</p>
+        <div class="fig-grid two">
+            <div class="reveal">
+                <span class="depth-tag">IoU · higher is better</span>
+                <div class="bars">
+                    <div class="bar-row best"><span class="name">AFFormer (ours)</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="val">0.503</span></div>
+                    <div class="bar-row"><span class="name">Attn U-Net + pretrained</span><div class="bar-track"><div class="bar-fill" style="width:97.1%"></div></div><span class="val">0.489</span></div>
+                    <div class="bar-row"><span class="name">U-Net</span><div class="bar-track"><div class="bar-fill" style="width:87.8%"></div></div><span class="val">0.442</span></div>
+                    <div class="bar-row"><span class="name">Attention U-Net</span><div class="bar-track"><div class="bar-fill" style="width:82.7%"></div></div><span class="val">0.416</span></div>
+                    <div class="bar-row"><span class="name">BowlNet</span><div class="bar-track"><div class="bar-fill" style="width:38.6%"></div></div><span class="val">0.194</span></div>
+                </div>
+            </div>
+            <div class="reveal">
+                <span class="depth-tag">Parameters (M) · lower is better</span>
+                <div class="bars">
+                    <div class="bar-row best"><span class="name">AFFormer (ours)</span><div class="bar-track"><div class="bar-fill" style="width:7.5%"></div></div><span class="val">2.98</span></div>
+                    <div class="bar-row"><span class="name">Attn U-Net + pretrained</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="val">39.56</span></div>
+                    <div class="bar-row"><span class="name">U-Net</span><div class="bar-track"><div class="bar-fill" style="width:43.6%"></div></div><span class="val">17.26</span></div>
+                    <div class="bar-row"><span class="name">Attention U-Net</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="val">39.56</span></div>
+                    <div class="bar-row"><span class="name">BowlNet</span><div class="bar-track"><div class="bar-fill" style="width:7.7%"></div></div><span class="val">3.05</span></div>
+                </div>
+            </div>
+        </div>
+        <p class="bars-note reveal">Cityscapes validation. BowlNet is just as small as AFFormer but far less accurate: being small alone isn't enough.</p>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="spectx-pose.html" class="prev"><div class="dir">← Previous</div><div class="t">Pose Estimation for Inspection Drones</div></a>
+            <a href="unbalanced-disk.html" class="next"><div class="dir">Next →</div><div class="t">Swinging Up an Unbalanced Disk</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>
