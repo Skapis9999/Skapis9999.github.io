@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="t d">
   <title id="t">JobRadar pipeline</title>
-  <desc id="d">Jobs are collected from 160+ sources, filtered by rules, ranked with embeddings and judged by a local LLM. Code then computes the final score for a dashboard, where tags teach a preference model and a button starts a headless AI agent.</desc>
+  <desc id="d">Jobs are collected from 370+ sources, filtered by rules, ranked with embeddings and judged by a local LLM. Code then computes the final score for a dashboard, where tags teach a preference model and a button starts a headless AI agent.</desc>
   <defs>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#98979f"/></marker>
     <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5eead4"/></marker>
@@ -36,8 +36,8 @@
 
   <rect class="box" x="40" y="60" width="210" height="180" rx="14"/>
   <text class="h" x="145" y="118">Collect</text>
-  <text class="s" x="145" y="152">160+ sources</text>
-  <text class="s" x="145" y="178">13 adapters, incl. a</text>
+  <text class="s" x="145" y="152">370+ sources</text>
+  <text class="s" x="145" y="178">20+ adapters, incl. a</text>
   <text class="s" x="145" y="202">browser crawler</text>
 
   <rect class="box" x="295" y="60" width="205" height="180" rx="14"/>
