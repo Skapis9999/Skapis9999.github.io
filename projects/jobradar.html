@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobRadar | Christos Skapetis</title>
+    <meta name="description" content="A local pipeline that collects jobs from 160+ sources, ranks them with embeddings and a local LLM, learns from my tags, and integrates a headless AI agent.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/jobradar.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="JobRadar: LLM Job Matching with an AI Agent">
+    <meta property="og:description" content="Collects jobs from 160+ sources, scores them with a local LLM, and hands the best ones to a headless AI agent.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/jobradar.html">
+    <meta property="og:image" content="https://skapis9999.github.io/og-image.png">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.09</span> Personal project · LLM Systems <span class="rule"></span></div>
+        <h1>JobRadar: LLM Job Matching with an AI Agent</h1>
+        <p class="tagline">A job search is a data problem: too many sources, too much noise. JobRadar collects postings, ranks them with a local LLM, learns from what I tag, and runs on my own machine.</p>
+        <dl class="meta-grid">
+            <div><dt>Type</dt><dd>Personal project</dd></div>
+            <div><dt>When</dt><dd>Since October 2026</dd></div>
+            <div><dt>Code</dt><dd>Private repository, as it holds personal data</dd></div>
+            <div><dt>Stack</dt><dd>Python · Ollama · FastAPI · SQLite · scikit-learn</dd></div>
+        </dl>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>A small local LLM is cheap and private, but it <em>doesn't reliably follow instructions</em>.</p>
+            <p>So the model gives its opinion, and <em>code has the final say</em>.</p>
+        </div>
+        <figure class="figure hero-figure reveal" style="margin-top:34px">
+            <div class="frame"><img src="../images/projects/jobradar/pipeline.svg" alt="Pipeline: jobs are collected, filtered, embedded and judged by a local LLM; code computes the score for a dashboard, where tags teach a preference model and a button starts a headless AI agent" width="1200" height="640"></div>
+            <figcaption><b>The pipeline.</b> Each stage narrows the list before a more expensive one runs, so the LLM only reads jobs that passed the rules and are new or changed.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Size</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">160+</div><div class="label">job sources collected from</div></div>
+            <div class="stat"><div class="value">13</div><div class="label">platform adapters, including a headless-browser crawler for custom sites</div></div>
+            <div class="stat teal"><div class="value">±7.5</div><div class="label">points at most from the learned preference model, so it can nudge but not take over</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Keeping a small model honest</h2>
+        <ul class="did-list reveal">
+            <li><strong>Schema-constrained output:</strong> the LLM returns JSON in a fixed structure, so every verdict can be checked by code.</li>
+            <li><strong>Grounding filter:</strong> a skill the model claims as a match is dropped unless my profile really supports it.</li>
+            <li><strong>Verifying the details:</strong> a salary only counts if it appears literally in the posting.</li>
+            <li><strong>Caps in code:</strong> the final score blends the LLM's fit (70%), embedding similarity (20%) and company priority (10%), and code then enforces the hard limits the model can't be trusted to apply.</li>
+            <li><strong>Explainable scores:</strong> each job keeps a breakdown, so the dashboard can show why it got its score.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Integrating an AI agent</h2>
+        <p class="lede reveal">One button in the dashboard starts <strong>Claude Code running headless</strong>, which tailors a CV and letter for that job. JobRadar orchestrates the agent rather than implementing one. For an agent loop I wrote myself, see the <a href="local-agent.html">local AI agent</a>.</p>
+        <div class="flow">
+            <div class="step reveal"><h3>Scoped permissions</h3><p>The agent runs with an explicit list of allowed tools.</p></div>
+            <div class="step reveal"><h3>Session resume</h3><p>Revisions continue the same session instead of starting from nothing.</p></div>
+            <div class="step reveal"><h3>Spending cap</h3><p>Every run has a budget limit, so a loop can't run up costs.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="local-agent.html" class="prev"><div class="dir">← Previous</div><div class="t">A Local AI Agent for My Files</div></a>
+            <a href="ttp.html" class="next"><div class="dir">Next →</div><div class="t">Temporal Token Propagation</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>
