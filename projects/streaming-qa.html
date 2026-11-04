@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streaming Web Question Answering | Christos Skapetis</title>
+    <meta name="description" content="My diploma thesis rebuilt as a streaming system: a local LLM plans web searches, Spark reads the pages in parallel, and Kafka connects every stage on Kubernetes.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/streaming-qa.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="Streaming Web Question Answering on Kubernetes">
+    <meta property="og:description" content="Ask a question; the system searches the live web, reads the pages in parallel and answers with citations using a local LLM.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/streaming-qa.html">
+    <meta property="og:image" content="https://skapis9999.github.io/og-image.png">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.07</span> Personal project · RAG &amp; Streaming <span class="rule"></span></div>
+        <h1>Streaming Web Question Answering on Kubernetes</h1>
+        <p class="tagline">Ask a question; the system searches the live web, reads the pages in parallel and answers with citations using a local LLM. My 2023 diploma thesis, rebuilt on Kafka and Spark.</p>
+        <dl class="meta-grid">
+            <div><dt>Type</dt><dd>Personal project</dd></div>
+            <div><dt>When</dt><dd>November 2026</dd></div>
+            <div><dt>Runs on</dt><dd>Local single-node Kubernetes</dd></div>
+            <div><dt>Stack</dt><dd>Kafka · Spark · Qdrant · Ollama · FastAPI · KEDA</dd></div>
+        </dl>
+        <div class="link-row">
+            <a class="btn btn-ghost" href="https://github.com/Skapis9999/DiplomaThesis" target="_blank" rel="noopener">View the original thesis repository</a>
+        </div>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>The thesis answered questions from the web, <em>one sequential step at a time</em>.</p>
+            <p>What changes if every step becomes its own <em>independent, scalable service</em>?</p>
+        </div>
+        <figure class="figure hero-figure reveal" style="margin-top:34px">
+            <div class="frame"><img src="../images/projects/streaming-qa/architecture.svg" alt="Architecture: a browser sends a question to an API, a searcher plans web searches, Spark reads the pages into Qdrant, and an answerer streams a cited answer back, with Kafka topics between the stages" width="1200" height="640"></div>
+            <figcaption><b>The pipeline.</b> Every stage reports progress to Kafka, so the browser sees pages arrive and the answer being written.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">From thesis to streaming system</h2>
+        <div class="flow">
+            <div class="step reveal"><h3>Plan the search</h3><p>The LLM writes search queries and SearXNG finds the pages. In the thesis, this was keyword extraction and a Google search.</p></div>
+            <div class="step reveal"><h3>Read in parallel</h3><p>Spark Structured Streaming fetches, cleans, chunks and embeds each page. The thesis pipeline read them one after another.</p></div>
+            <div class="step reveal"><h3>Store the vectors</h3><p>Chunks go into Qdrant instead of Elasticsearch. Pages stay cached for 24 hours, so the next question can reuse them.</p></div>
+            <div class="step reveal"><h3>Answer twice</h3><p>A fast answer after the first pages, a final one when all are read. The LLM now writes the answers, where the thesis extracted them.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Engineering details</h2>
+        <ul class="did-list reveal">
+            <li><strong>Autoscaling on real load:</strong> KEDA scales the searcher and answerer between 1 and 3 replicas on Kafka consumer lag.</li>
+            <li><strong>Operators over scripts:</strong> Strimzi manages Kafka and its topics, and the Spark Operator submits the streaming job and restarts it if it stops.</li>
+            <li><strong>Removing a hidden wait:</strong> Spark's Kafka sink writes only when a whole micro-batch finishes, so one slow page held back every answer. Executors now publish each page's result as soon as it is done.</li>
+            <li><strong>Answers you can check:</strong> citations are numbered per page, at most 3 chunks come from one source, and the model is told to say so when the sources don't contain the answer.</li>
+        </ul>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Evaluation</h2>
+        <p class="lede reveal">I replayed the <strong>49 questions from the thesis</strong> through the full system and graded each final answer against a reference answer.</p>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">84%</div><div class="label">of final answers graded correct (41 of 49)</div></div>
+            <div class="stat"><div class="value">20.3 s</div><div class="label">median time to the final answer</div></div>
+            <div class="stat teal"><div class="value">15.9 s</div><div class="label">median time to the fast answer</div></div>
+        </div>
+        <div class="bars reveal" style="margin-top:30px" role="img" aria-label="Share of answers graded correct: open questions 94 percent, factual questions 81 percent, time-sensitive questions 60 percent">
+            <div class="bar-row best"><div class="name">Open (17)</div><div class="bar-track"><div class="bar-fill" style="width:94%"></div></div><div class="val">94%</div></div>
+            <div class="bar-row"><div class="name">Factual (26)</div><div class="bar-track"><div class="bar-fill" style="width:81%"></div></div><div class="val">81%</div></div>
+            <div class="bar-row"><div class="name">Time-sensitive (5)</div><div class="bar-track"><div class="bar-fill" style="width:60%"></div></div><div class="val">60%</div></div>
+        </div>
+        <p class="bars-note reveal">The remaining question was in a category of its own (obscure) and was graded correct.</p>
+        <p class="lede reveal" style="margin-top:26px"><strong>How far to trust these numbers.</strong> The grader is the same small model that writes the answers, and a manual check found it marked at least two correct answers wrong. The thesis measured all candidate answers rather than one final answer, so the two results are not directly comparable. And 33% of page fetches failed, which is the clearest thing left to improve.</p>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="jetbot.html" class="prev"><div class="dir">← Previous</div><div class="t">Autonomous JetBot</div></a>
+            <a href="local-agent.html" class="next"><div class="dir">Next →</div><div class="t">A Local AI Agent for My Files</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

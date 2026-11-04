@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Local AI Agent for My Files | Christos Skapetis</title>
+    <meta name="description" content="A tool-calling agent written from scratch on a local LLM. It searches, reads and browses 1,094 university files to answer questions, and nothing leaves the machine.">
+    <meta name="author" content="Christos Skapetis">
+    <link rel="canonical" href="https://skapis9999.github.io/projects/local-agent.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Christos Skapetis">
+    <meta property="og:title" content="A Local AI Agent for My Files">
+    <meta property="og:description" content="A tool-calling agent written from scratch on a local LLM, answering questions over 1,094 files without anything leaving the machine.">
+    <meta property="og:url" content="https://skapis9999.github.io/projects/local-agent.html">
+    <meta property="og:image" content="https://skapis9999.github.io/og-image.png">
+    <meta name="theme-color" content="#0a0a0c">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/project.css">
+    <noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <a href="../index.html" class="brand">CS<span class="dot">.</span></a>
+        <a href="../index.html#projects" class="back-link">← All projects</a>
+    </div>
+</nav>
+
+<header class="p-hero">
+    <div class="wrap">
+        <div class="kicker"><span class="num">P.08</span> Personal project · AI Agents <span class="rule"></span></div>
+        <h1>A Local AI Agent for My Files</h1>
+        <p class="tagline">Two years of university work in one folder, and a small model on my own GPU that decides for itself how to search it. No framework, no cloud, and nothing leaves the machine.</p>
+        <dl class="meta-grid">
+            <div><dt>Type</dt><dd>Personal project</dd></div>
+            <div><dt>When</dt><dd>November 2026</dd></div>
+            <div><dt>Runs on</dt><dd>One 8 GB GPU</dd></div>
+            <div><dt>Stack</dt><dd>Python · Ollama · qwen3:8b · NumPy · pypdf</dd></div>
+        </dl>
+    </div>
+</header>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="summary reveal">
+            <p>Keyword search can't answer <em>"what was the main conclusion of my graduation project?"</em></p>
+            <p>So the model gets tools, and <em>chooses what to do next</em> until it can answer.</p>
+        </div>
+        <figure class="figure hero-figure reveal" style="margin-top:34px">
+            <div class="frame"><img src="../images/projects/local-agent/agent-loop.svg" alt="Architecture: files are extracted, chunked and embedded into an index; for each question a local LLM calls search, read and browse tools in a loop, then answers and cites the files it used" width="1200" height="640"></div>
+            <figcaption><b>Two parts.</b> Indexing runs ahead of time and only touches files that changed. Answering is a loop that the model controls.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">The tools it can choose from</h2>
+        <div class="flow">
+            <div class="step reveal"><h3>Search</h3><p>Semantic search across all passages, optionally limited to one folder. Results come with file path and page.</p></div>
+            <div class="step reveal"><h3>Read</h3><p>Opens one whole file, for questions like summarising a report. Long files are truncated to protect the context window.</p></div>
+            <div class="step reveal"><h3>Browse</h3><p>Lists a folder like a file explorer. Questions such as "which courses did I take?" are about structure, not content.</p></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">Size</h2>
+        <div class="stats reveal">
+            <div class="stat"><div class="value">1,094</div><div class="label">files indexed: PDFs, slides, reports, notebooks and code</div></div>
+            <div class="stat"><div class="value">33,628</div><div class="label">searchable text chunks</div></div>
+            <div class="stat teal"><div class="value">8</div><div class="label">steps at most per question, so the agent can't loop forever</div></div>
+        </div>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <h2 class="reveal">What makes a small agent work</h2>
+        <ul class="did-list reveal">
+            <li><strong>Errors the model can act on:</strong> if a folder doesn't exist, the tool replies with the folders that do, so the model can try again instead of deciding there is nothing there.</li>
+            <li><strong>Protecting the context window:</strong> tool results stay within one question, and only the questions and answers carry over. With 8,192 tokens, old results would quickly push out what matters.</li>
+            <li><strong>Debugging from traces:</strong> each session logs every tool call, result, reasoning step and token count, which shows whether a wrong answer came from the search or from the model.</li>
+            <li><strong>Incremental indexing:</strong> re-running the indexer handles new, changed and deleted files only, and a file that fails is retried on the next run.</li>
+            <li><strong>Privacy by default:</strong> private admin and finance folders are excluded from the index, and every model runs locally.</li>
+        </ul>
+        <p class="lede reveal" style="margin-top:26px"><strong>What it isn't yet:</strong> so far I have tested it by hand on real questions, without a formal benchmark. That is why this page shows no accuracy number.</p>
+    </div>
+</section>
+
+<section class="p-section">
+    <div class="wrap">
+        <div class="pager">
+            <a href="streaming-qa.html" class="prev"><div class="dir">← Previous</div><div class="t">Streaming Web Question Answering</div></a>
+            <a href="ttp.html" class="next"><div class="dir">Next →</div><div class="t">Temporal Token Propagation</div></a>
+        </div>
+    </div>
+</section>
+
+<footer class="wrap">
+    <span>© 2026 Christos Skapetis</span>
+    <span><a href="../index.html#projects">← Back to projects</a></span>
+</footer>
+
+<script src="../assets/project.js"></script>
+</body>
+</html>

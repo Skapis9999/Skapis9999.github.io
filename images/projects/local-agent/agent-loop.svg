@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="t d">
+  <title id="t">Local agent architecture</title>
+  <desc id="d">Files are extracted, chunked and embedded into an index. For each question, a local LLM calls search, read and browse tools in a loop of up to eight steps, then answers and cites the files it used.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#98979f"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5eead4"/></marker>
+    <style>
+      text { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; fill: #f2f0ea; }
+      .box { fill: #1a1a1e; stroke: rgba(255,255,255,0.22); stroke-width: 1.5; }
+      .hot { fill: #24191a; stroke: #ff5a36; stroke-width: 2; }
+      .h { font-size: 25px; font-weight: 700; text-anchor: middle; }
+      .s { font-size: 18px; fill: #b4b3ba; text-anchor: middle; }
+      .tool { font-size: 18px; fill: #5eead4; text-anchor: middle; font-family: Consolas, Menlo, monospace; }
+      .wire { stroke: #98979f; stroke-width: 2.5; fill: none; }
+      .back { stroke: #5eead4; stroke-width: 2.5; fill: none; }
+      .lab { font-size: 18px; fill: #ff8a70; text-anchor: middle; }
+      .tag { font-size: 16px; fill: #98979f; font-family: Consolas, Menlo, monospace; letter-spacing: 1px; }
+      .foot { font-size: 18px; fill: #98979f; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1200" height="640" fill="#0e0e11"/>
+
+  <text class="tag" x="40" y="42">INDEXING: ONLY NEW OR CHANGED FILES</text>
+  <text class="tag" x="40" y="262">ANSWERING: UP TO 8 STEPS PER QUESTION</text>
+
+  <!-- ingest arrows -->
+  <path class="wire" d="M240 115H282" marker-end="url(#a)"/>
+  <path class="wire" d="M485 115H527" marker-end="url(#a)"/>
+  <path class="wire" d="M730 115H772" marker-end="url(#a)"/>
+  <!-- index to tools -->
+  <path class="wire" d="M1085 180V330H992" marker-end="url(#a)"/>
+  <!-- question to LLM -->
+  <path class="wire" d="M240 395H312" marker-end="url(#a)"/>
+  <!-- LLM to tools and back -->
+  <path class="back" d="M560 355H712" marker-end="url(#b)"/>
+  <path class="back" d="M712 435H562" marker-end="url(#b)"/>
+  <!-- LLM to answer -->
+  <path class="wire" d="M438 480V532" marker-end="url(#a)"/>
+
+  <!-- ingest boxes -->
+  <rect class="box" x="40" y="60" width="200" height="110" rx="14"/>
+  <text class="h" x="140" y="108">1,094 files</text>
+  <text class="s" x="140" y="138">PDF, Word, code...</text>
+  <rect class="box" x="285" y="60" width="200" height="110" rx="14"/>
+  <text class="h" x="385" y="108">Extract</text>
+  <text class="s" x="385" y="138">per page or slide</text>
+  <rect class="box" x="530" y="60" width="200" height="110" rx="14"/>
+  <text class="h" x="630" y="108">Chunk</text>
+  <text class="s" x="630" y="138">1,200 characters</text>
+  <rect class="box" x="775" y="50" width="385" height="130" rx="14"/>
+  <text class="h" x="967" y="102">Embed and index</text>
+  <text class="s" x="967" y="134">33,628 chunks, in memory</text>
+
+  <!-- answering boxes -->
+  <rect class="box" x="40" y="340" width="200" height="110" rx="14"/>
+  <text class="h" x="140" y="388">Question</text>
+  <text class="s" x="140" y="418">from the chat</text>
+
+  <rect class="box hot" x="315" y="310" width="245" height="170" rx="14"/>
+  <text class="h" x="437" y="374">Local LLM</text>
+  <text class="s" x="437" y="406">qwen3:8b on Ollama</text>
+  <text class="s" x="437" y="432">decides the next step</text>
+
+  <rect class="box" x="715" y="280" width="275" height="200" rx="14"/>
+  <text class="h" x="852" y="324">Tools</text>
+  <text class="tool" x="852" y="366">search_documents</text>
+  <text class="tool" x="852" y="400">read_document</text>
+  <text class="tool" x="852" y="434">browse_folder</text>
+
+  <text class="lab" x="636" y="340">tool call</text>
+  <text class="lab" x="636" y="465">result</text>
+
+  <rect class="box" x="315" y="535" width="245" height="72" rx="14"/>
+  <text class="h" x="437" y="569" style="font-size:22px">Answer</text>
+  <text class="s" x="437" y="594" style="font-size:16px">cites the files it used</text>
+
+  <text class="foot" x="880" y="565">Every step is logged: tool calls, results,</text>
+  <text class="foot" x="880" y="591">reasoning and token counts.</text>
+</svg>

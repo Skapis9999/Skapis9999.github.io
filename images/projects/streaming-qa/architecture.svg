@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="t d">
+  <title id="t">Streaming question answering architecture</title>
+  <desc id="d">A browser sends a question to an API. A searcher plans web searches, Spark reads the pages and stores vectors in Qdrant, and an answerer retrieves the best chunks and streams a cited answer back. Kafka topics connect each stage.</desc>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#98979f"/></marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#5eead4"/></marker>
+    <style>
+      text { font-family: 'Segoe UI', Helvetica, Arial, sans-serif; fill: #f2f0ea; }
+      .box { fill: #1a1a1e; stroke: rgba(255,255,255,0.22); stroke-width: 1.5; }
+      .hot { fill: #24191a; stroke: #ff5a36; stroke-width: 2; }
+      .h { font-size: 25px; font-weight: 700; text-anchor: middle; }
+      .s { font-size: 18px; fill: #b4b3ba; text-anchor: middle; }
+      .scale { font-size: 16px; fill: #5eead4; text-anchor: middle; font-family: Consolas, Menlo, monospace; }
+      .wire { stroke: #98979f; stroke-width: 2.5; fill: none; }
+      .back { stroke: #5eead4; stroke-width: 2.5; fill: none; }
+      .pill { fill: #0a0a0c; stroke: #ff5a36; stroke-width: 1.5; }
+      .topic { font-size: 16px; fill: #ff8a70; text-anchor: middle; font-family: Consolas, Menlo, monospace; }
+      .note { font-size: 17px; fill: #5eead4; text-anchor: middle; }
+      .foot { font-size: 18px; fill: #98979f; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="1200" height="640" fill="#0e0e11"/>
+
+  <!-- arrows, row 1 -->
+  <path class="wire" d="M240 150H312" marker-end="url(#a)"/>
+  <path class="wire" d="M510 150H632" marker-end="url(#a)"/>
+  <path class="wire" d="M830 150H932" marker-end="url(#a)"/>
+  <!-- Spark to Qdrant -->
+  <path class="wire" d="M1050 250V392" marker-end="url(#a)"/>
+  <!-- Spark to answerer -->
+  <path class="wire" d="M970 250V320H730V392" marker-end="url(#a)"/>
+  <!-- Qdrant to answerer -->
+  <path class="wire" d="M950 470H832" marker-end="url(#a)"/>
+  <!-- answerer back to browser -->
+  <path class="back" d="M630 470H140V252" marker-end="url(#b)"/>
+
+  <!-- row 1 boxes -->
+  <rect class="box" x="40" y="80" width="200" height="140" rx="14"/>
+  <text class="h" x="140" y="142">Browser</text>
+  <text class="s" x="140" y="172">asks a question</text>
+
+  <rect class="box" x="315" y="80" width="195" height="140" rx="14"/>
+  <text class="h" x="412" y="142">API</text>
+  <text class="s" x="412" y="172">FastAPI</text>
+
+  <rect class="box" x="635" y="60" width="195" height="180" rx="14"/>
+  <text class="h" x="732" y="112">Searcher</text>
+  <text class="s" x="732" y="142">LLM plans queries,</text>
+  <text class="s" x="732" y="166">SearXNG finds URLs</text>
+  <text class="scale" x="732" y="210">KEDA 1-3 replicas</text>
+
+  <rect class="box hot" x="935" y="50" width="225" height="200" rx="14"/>
+  <text class="h" x="1047" y="96">Spark streaming</text>
+  <text class="s" x="1047" y="128">driver + 2 executors</text>
+  <text class="s" x="1047" y="168">fetch, clean, chunk,</text>
+  <text class="s" x="1047" y="192">embed each page</text>
+
+  <!-- row 2 boxes -->
+  <rect class="box" x="950" y="395" width="200" height="150" rx="14"/>
+  <text class="h" x="1050" y="455">Qdrant</text>
+  <text class="s" x="1050" y="485">vectors, cached</text>
+  <text class="s" x="1050" y="509">by URL for 24 h</text>
+
+  <rect class="box" x="635" y="395" width="195" height="170" rx="14"/>
+  <text class="h" x="732" y="443">Answerer</text>
+  <text class="s" x="732" y="473">local LLM writes a</text>
+  <text class="s" x="732" y="497">cited answer</text>
+  <text class="scale" x="732" y="541">KEDA 1-3 replicas</text>
+
+  <!-- Kafka topics -->
+  <rect class="pill" x="522" y="118" width="98" height="30" rx="15"/>
+  <text class="topic" x="571" y="139">questions</text>
+  <rect class="pill" x="848" y="118" width="64" height="30" rx="15"/>
+  <text class="topic" x="880" y="139">urls</text>
+  <rect class="pill" x="782" y="305" width="136" height="30" rx="15"/>
+  <text class="topic" x="850" y="326">chunks-ready</text>
+  <rect class="pill" x="350" y="455" width="78" height="30" rx="15"/>
+  <text class="topic" x="389" y="476">events</text>
+
+  <text class="note" x="389" y="515">fast answer, final answer and</text>
+  <text class="note" x="389" y="539">progress, streamed over SSE</text>
+  <text class="s" x="891" y="456">top-k</text>
+
+  <text class="foot" x="600" y="612">Orange pills are Kafka topics. Single-node Kubernetes on Docker Desktop, with Ollama on the host.</text>
+</svg>
